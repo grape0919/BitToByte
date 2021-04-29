@@ -3,7 +3,7 @@ from reprint import output
 import time
 
 NUM_OUTPUT_COLOMN = 4
-INTERVAL = "minute10"
+INTERVAL = "hour"
 tickers = pybithumb.get_tickers()
 # print(tickers)
 all = {}
@@ -64,9 +64,12 @@ def process():
                 i = 0
                 for ticker, data in all.items() :
                     space = ''
+                    check_value = round((ma30_list[ticker]-(float(data['closing_price'])))/float(data['closing_price'])*100,2)
                     for len_nm in range(30-((len(data['closing_price'])*3)+(len(ticker)))):
                         space = space + ' '
-                    print_str = print_str + ('\033[33m' if ma5_list[ticker] > float(data['closing_price']) and ma5_list[ticker] < ma30_list[ticker] and ma30_list[ticker] > float(data['closing_price']) else '\033[37m') + ticker + "\033[0m"
+                    print_str = print_str + ('\033[33m' + f"({check_value}%)"\
+                         if check_value > 5.0 and ma5_list[ticker] < ma30_list[ticker] and ma30_list[ticker] > float(data['closing_price']) else '\033[37m') + ticker \
+                        + "\033[0m"
                     print_str = print_str + ' : ' + ('\033[31m' if float(data['closing_price']) >= float(data['opening_price']) else '\033[34m')  \
                         + data['closing_price'] + "\033[37m"
                     print_str = print_str + ' : ' + '\033[93m' + str(round(ma5_list[ticker],1)) + '\033[0m' + ' : ' + '\033[95m' + str(round(ma30_list[ticker],1)) + '\033[0m' + space
@@ -82,7 +85,7 @@ def process():
                 # print(print_str, end='\r', flush=True)
                     
 
-            time.sleep(0.2)
+            time.sleep(5)
 
 def hme(pur, sel):
     return ((sel - pur) / pur) * 100
