@@ -1,6 +1,7 @@
 import pybithumb
 from reprint import output
 import time
+import util
 
 NUM_OUTPUT_COLOMN = 4
 INTERVAL = "hour"
@@ -34,7 +35,7 @@ def make_bull_matrix(interval):
     else :
         print("Failed make bull metrix")
 
-def process():
+def process(threshold=3.0, interval=30):
 
     ma5_list = {}
     ma30_list = {}
@@ -68,7 +69,7 @@ def process():
                     for len_nm in range(30-((len(data['closing_price'])*3)+(len(ticker)))):
                         space = space + ' '
                     print_str = print_str + ('\033[33m' + f"({check_value}%)"\
-                         if check_value > 5.0 and ma5_list[ticker] < ma30_list[ticker] and ma30_list[ticker] > float(data['closing_price']) else '\033[37m') + ticker \
+                         if check_value > threshold and ma5_list[ticker] < ma30_list[ticker] and ma30_list[ticker] > float(data['closing_price']) else '\033[37m') + ticker \
                         + "\033[0m"
                     print_str = print_str + ' : ' + ('\033[31m' if float(data['closing_price']) >= float(data['opening_price']) else '\033[34m')  \
                         + data['closing_price'] + "\033[37m"
@@ -85,12 +86,10 @@ def process():
                 # print(print_str, end='\r', flush=True)
                     
 
-            time.sleep(5)
+            time.sleep(15)
 
-def hme(pur, sel):
-    return ((sel - pur) / pur) * 100
 if __name__ == "__main__":
-    make_bull_matrix(5)
-    make_bull_matrix(30)
-    process()
+    # make_bull_matrix(5)
+    # make_bull_matrix(30)
+    process(threshold=3.0, interval=15)
     # hme()
