@@ -85,7 +85,7 @@ def process(threshold=3.0, interval=30):
                 # print(print_str, end='\r', flush=True)
                     
 
-            time.sleep(15)
+            time.sleep(interval)
 
 if __name__ == "__main__":
 
