@@ -2,6 +2,7 @@ import pybithumb
 from reprint import output
 import time
 import util
+import sys
 
 NUM_OUTPUT_COLOMN = 4
 INTERVAL = "hour"
@@ -14,8 +15,6 @@ def bull_market(ticker, interval):
     if not df is None:
         ma = df['close'].rolling(window=interval).mean()
         time.sleep(0.1)
-        print("1", ma[-1])
-        print("2", ma[-2])
         return ma[-1]
     else :
         print("failed make bull : ", interval)
@@ -89,7 +88,26 @@ def process(threshold=3.0, interval=30):
             time.sleep(15)
 
 if __name__ == "__main__":
-    # make_bull_matrix(5)
-    # make_bull_matrix(30)
-    process(threshold=3.0, interval=15)
+
+    ma5 = False
+    ma30 = False
+    th = 3.0
+    inter = 15
+
+    for conf in sys.argv :
+        if conf == '-ma5' :
+            ma5 = True
+        if conf == '-ma30' :
+            ma30 = True
+        if conf.startswith('-th') :
+            th = conf.split('=')[1]
+        if conf.startswith('-in'):
+            inter = conf.split('=')[1]
+
+    if ma5 :
+        make_bull_matrix(5)
+    if ma30 :
+        make_bull_matrix(30)
+
+    process(threshold=float(th), interval=int(inter))
     # hme()
