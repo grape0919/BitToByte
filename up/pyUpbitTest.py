@@ -10,24 +10,25 @@ HEADERS = {"Accept": "application/json"}
 def requestToUpbit(url:str, params:dict):
     return requests.request("GET", url, headers=HEADERS, params=querystring)
 
-# url = "https://api.upbit.com/v1/market/all"
+url = "https://api.upbit.com/v1/market/all"
 
-# querystring = {"isDetails":"true"}
-
-
-# # 요청 1회
-# response = requestToUpbit(url, querystring)
-
-# # print(response.text)
+querystring = {"isDetails":"true"}
 
 
-# bitList = json.loads(response.text)
-# # print(bitList)
-# setBitList = []
-# setBitList = [bit['english_name'] for bit in bitList if str(bit['market']).startswith('KRW')]
+# 요청 1회
+response = requestToUpbit(url, querystring)
+
+# print(response.text)
+
+
+bitList = json.loads(response.text)
+# print(bitList)
+setBitList = []
+setBitList = [bit['market'] for bit in bitList if str(bit['market']).startswith('KRW')]
+strBitList = ','.join(setBitList)
 # print(len(setBitList))
 
-
+print(strBitList)
 # url = "https://api.upbit.com/v1/candles/days"
 
 # querystring = {"market":"KRW-BTC","count":"1"}
@@ -45,7 +46,7 @@ def requestToUpbit(url:str, params:dict):
 
 url = "https://api.upbit.com/v1/ticker"
 headers = {"Accept": "application/json"}
-querystring = {"markets":"KRW-BTC"}
+querystring = {"markets":strBitList}
 response = requestToUpbit(url, querystring)
 print(response.text)
 

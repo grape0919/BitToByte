@@ -14,3 +14,6 @@
 
 ### REST API 요청 수 제한
 * 분당 600회, 초당 10회 (종목, 캔들, 체결, 티커, 호가별)
+
+# git stdashboard 
+https://github.com/dpuljic01/financial-dashboard
