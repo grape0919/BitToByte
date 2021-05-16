@@ -28,7 +28,7 @@ def make_bull_matrix(interval):
             ma = bull_market(ticker,interval)
             write_str = write_str + ticker + "\t" + str(ma) + "\n"
 
-        with open("ma"+str(interval),"w", encoding="utf8") as wf:
+        with open("thumb/ma"+str(interval),"w", encoding="utf8") as wf:
             wf.write(write_str)
             wf.close()
     else :
@@ -38,14 +38,14 @@ def process(threshold=3.0, interval=30):
 
     ma5_list = {}
     ma30_list = {}
-    with open("ma5", "r", encoding="utf8") as rf:
+    with open("thumb/ma5", "r", encoding="utf8") as rf:
         for line in rf.readlines():
             tup = line.split("\t")
             if tup[1] == 'None\n':
                 tup[1] = 0.0
             ma5_list.update({tup[0]:float(tup[1])})
         rf.close()
-    with open("ma30", "r", encoding="utf8") as rf:   
+    with open("thumb/ma30", "r", encoding="utf8") as rf:   
         for line in rf.readlines():
             tup = line.split("\t")
             if tup[1] == 'None\n':
@@ -54,7 +54,7 @@ def process(threshold=3.0, interval=30):
         rf.close()
 
 
-    with output(initial_len=int(len(tickers)/NUM_OUTPUT_COLOMN), interval=0) as output_line:
+    with output(initial_len=int(len(tickers)/NUM_OUTPUT_COLOMN)+1, interval=0) as output_line:
         while True:
             all = pybithumb.get_current_price("ALL")
 
@@ -64,8 +64,11 @@ def process(threshold=3.0, interval=30):
                 i = 0
                 for ticker, data in all.items() :
                     space = ''
-                    check_value = round((ma30_list[ticker]-(float(data['closing_price'])))/float(data['closing_price'])*100,2)
-                    for len_nm in range(30-((len(data['closing_price'])*3)+(len(ticker)))):
+                    try:
+                        check_value = round((ma30_list[ticker]-(float(data['closing_price'])))/float(data['closing_price'])*100,2)
+                    except:
+                        continue
+                    for _ in range(30-((len(data['closing_price'])*3)+(len(ticker)))):
                         space = space + ' '
                     print_str = print_str + ('\033[33m' + f"({check_value}%)"\
                          if check_value > threshold and ma5_list[ticker] < ma30_list[ticker] and ma30_list[ticker] > float(data['closing_price']) else '\033[37m') + ticker \
@@ -89,8 +92,8 @@ def process(threshold=3.0, interval=30):
 
 if __name__ == "__main__":
 
-    ma5 = False
-    ma30 = False
+    ma5 = True
+    ma30 = True
     th = 3.0
     inter = 15
 
