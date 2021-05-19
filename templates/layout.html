@@ -1,0 +1,9 @@
+{% block head%}
+    <title>URBANE</title>
+{% endblock %}
+{% include 'sidebar.html' %}
+<div class="container" style="overflow-y:scroll">
+<div class="container p-3 col-md-7 mt-5 h-100">
+    {% block content %}{% endblock %}
+</div>
+</div>
