@@ -50,3 +50,21 @@ querystring = {"markets":strBitList}
 response = requestToUpbit(url, querystring)
 print(response.text)
 
+data = json.loads(response.text)
+# print("!@#!@# data : ", data)
+
+from data.realTimeData import tickerEntry
+
+
+entry = tickerEntry()
+
+attribute = [att for att in dir(entry) if not att.startswith('_')]
+
+entryList = []
+for bit in data:
+    entry = tickerEntry()
+    for att in attribute:
+        entry.__setattr__(att,bit[att])
+
+    entryList.append(entry)
+    print("!@#!@# entry : ", entry)
