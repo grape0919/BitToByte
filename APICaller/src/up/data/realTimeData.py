@@ -1,3 +1,5 @@
+from typing import Iterable, Any
+
 class tickerEntry():
     market = ""
     trade_date = ""
@@ -26,10 +28,24 @@ class tickerEntry():
     lowest_52_week_date = ""
     timestamp = 0
 
+    def __dir__(self) -> Iterable[str]:
+        print(super.__dir__(self))
+        attribute = [att for att in super.__dir__(self) if not att.startswith('_')]
+        return attribute
+
     def __str__(self) -> str:
         result = ""
-        attribute = [att for att in dir(self) if not att.startswith('_')]
+        attribute = [att for att in dir(self)]
         for a in attribute:
             result += str(a) + " : " + str(self.__getattribute__(a))
 
         return result
+
+    def _getItems_(self):
+        result = {}
+        attribute = [att for att in dir(self)]
+        for a in attribute:
+            result.update({a:self.__getattribute__(a)})
+
+        return result
+    

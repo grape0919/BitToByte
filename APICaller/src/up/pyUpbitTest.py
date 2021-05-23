@@ -4,67 +4,60 @@ import time
 
 from requests.api import request
 
+from APICaller.src.up.data.realTimeData import tickerEntry
 
 HEADERS = {"Accept": "application/json"}
 
 def requestToUpbit(url:str, params:dict):
-    return requests.request("GET", url, headers=HEADERS, params=querystring)
+    response = requests.request("GET", url, headers=HEADERS, params=params)
+    time.sleep(0.1)
+    return response
 
-url = "https://api.upbit.com/v1/market/all"
+def getCoinList():
+    url = "https://api.upbit.com/v1/market/all"
 
-querystring = {"isDetails":"true"}
-
-
-# 요청 1회
-response = requestToUpbit(url, querystring)
-
-# print(response.text)
+    querystring = {"isDetails":"true"}
 
 
-bitList = json.loads(response.text)
-# print(bitList)
-setBitList = []
-setBitList = [bit['market'] for bit in bitList if str(bit['market']).startswith('KRW')]
-strBitList = ','.join(setBitList)
-# print(len(setBitList))
+    # 요청 1회
+    response = requestToUpbit(url, querystring)
 
-print(strBitList)
-# url = "https://api.upbit.com/v1/candles/days"
-
-# querystring = {"market":"KRW-BTC","count":"1"}
-
-# response = requestToUpbit(url, querystring)
-# print(response.text)
-
-# candle = json.loads(response.text)[0]
-
-# print(candle)
-# print('open : ', str(candle['opening_price']))
-# print('trade_price : ', str(candle['trade_price']))
-# # 초당 10회 / 분당 600 회
+    # print(response.text)
 
 
-url = "https://api.upbit.com/v1/ticker"
-headers = {"Accept": "application/json"}
-querystring = {"markets":strBitList}
-response = requestToUpbit(url, querystring)
-print(response.text)
+    bitList = json.loads(response.text)
+    # print(bitList)
+    setBitList = []
+    setBitList = [bit['market'] for bit in bitList if str(bit['market']).startswith('KRW')]
+    strBitList = ','.join(setBitList)
+    # print(len(setBitList))
 
-data = json.loads(response.text)
-# print("!@#!@# data : ", data)
-
-from data.realTimeData import tickerEntry
+    return strBitList
 
 
-entry = tickerEntry()
+def ticker(strBitList):
+    
+    url = "https://api.upbit.com/v1/ticker"
+    querystring = {"markets":strBitList}
+    response = requestToUpbit(url, querystring)
 
-attribute = [att for att in dir(entry) if not att.startswith('_')]
+    data = json.loads(response.text)
+    # print("!@#!@# data : ", data)
 
-entryList = []
-for bit in data:
     entry = tickerEntry()
-    for att in attribute:
-        entry.__setattr__(att,bit[att])
 
-    entryList.append(entry)
-    print("!@#!@# entry : ", entry)
+    attribute = dir(entry)
+    print(attribute)
+    
+    entryList = []
+    for bit in data:
+        entry = tickerEntry()
+        for att in attribute:
+            setattr(entry,att,bit[att])
+
+        entryList.append(entry._getItems_())
+    
+    return entryList
+
+def tickerAll():
+    return ticker(getCoinList())

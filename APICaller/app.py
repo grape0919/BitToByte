@@ -1,12 +1,12 @@
 # --*-- coding: UTF-8
 from flask import Flask, g, render_template, request, redirect, session, flash, send_file, url_for
 
-from log.Logger import Logger
+from APICaller.log.Logger import Logger
 import os
 
 from flask_session import Session
 
-from conf.config import Config
+from APICaller.conf.config import Config
 
 app = Flask(__name__)
 sess = Session()
