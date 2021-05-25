@@ -1,12 +1,19 @@
 {% extends 'layouts/base.html' %}
 
-{% block title %} Dashboard {% endblock title %}
+{% block title %} 거래현황 {% endblock title %}
 
 <!-- Specific CSS goes HERE -->
 {% block stylesheets %}{% endblock stylesheets %}
 
 {% block content %}
-
+    <script type="text/javascript">
+      function autoRefresh_div()
+        {
+        var currentLocation = window.location;
+        $("#page").load(currentLocation + ' #page');
+        }
+        setInterval('autoRefresh_div()', 500);
+    </script>
     <!-- Header -->
     <div class="header bg-primary pb-6">
       <div class="container-fluid">
@@ -22,10 +29,10 @@
                 </ol>
               </nav>
             </div>
-            <div class="col-lg-6 col-5 text-right">
+            <!--<div class="col-lg-6 col-5 text-right">
               <a href="#" class="btn btn-sm btn-neutral">New</a>
               <a href="#" class="btn btn-sm btn-neutral">Filters</a>
-            </div>
+            </div>-->
           </div>
           <!-- Card stats -->
           <div class="row">
@@ -119,14 +126,11 @@
     <div class="container-fluid mt--6">
       <div class="row">
         <div class="col-xl-12">
-          <div class="card">
+          <div  id="page" class="card">
             <div class="card-header border-0">
               <div class="row align-items-center">
                 <div class="col">
-                  <h3 class="mb-0">Page visits</h3>
-                </div>
-                <div class="col text-right">
-                  <a href="#!" class="btn btn-sm btn-primary">See all</a>
+                  <h3 class="mb-0">거래 현황</h3>
                 </div>
               </div>
             </div>

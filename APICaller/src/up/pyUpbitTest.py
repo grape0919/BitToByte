@@ -47,7 +47,7 @@ def ticker(strBitList):
     entry = tickerEntry()
 
     attribute = dir(entry)
-    print(attribute)
+    # print(attribute)
     
     entryList = []
     for bit in data:

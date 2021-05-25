@@ -29,7 +29,7 @@ class tickerEntry():
     timestamp = 0
 
     def __dir__(self) -> Iterable[str]:
-        print(super.__dir__(self))
+        # print(super.__dir__(self))
         attribute = [att for att in super.__dir__(self) if not att.startswith('_')]
         return attribute
 
