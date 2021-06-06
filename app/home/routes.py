@@ -20,13 +20,13 @@ def index():
 @login_required
 def alarmii():
     target = "KRW-BTC"
-    return render_template('alarmii.html', datas=tickerAll())
+    return render_template('alarmii.html', segment='alarmii', datas=tickerAll())
 
 @blueprint.route('/simulation')
 @login_required
 def simulation():
     target = "KRW-BTC"
-    return render_template('simulation.html', datas=tickerAll())
+    return render_template('simulation.html', segment='simulation', datas=tickerAll())
 
 @blueprint.route('/<template>')
 @login_required
