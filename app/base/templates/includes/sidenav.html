@@ -3,7 +3,7 @@
     <!-- Brand -->
     <div class="sidenav-header  align-items-center">
       <a class="navbar-brand" href="/">
-        <img src="/static/assets/img/brand/blue.png" class="navbar-brand-img" alt="Argon Dashboard - Flask Template Logo.">
+        <img src="/static/assets/img/brand/navlogo.png" alt="Argon Dashboard - Flask Template Logo.">
       </a>
     </div>
     <div class="navbar-inner">
@@ -19,8 +19,14 @@
           </li>
           <li class="nav-item">
             <a class="nav-link {% if 'alarmii' in segment %} active {% endif %}" href="/alarmii">
-              <i class="ni ni-notification-70 text-orange"></i>
-              <span class="nav-link-text">알라미</span>
+              <i class="ni ni-bell-55 text-danger"></i>
+              <span class="nav-link-text">조건알림</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if 'simulation' in segment %} active {% endif %}" href="/simulation">
+              <i class="ni ni-money-coins text-darkyellow"></i>
+              <span class="nav-link-text">모의투자</span>
             </a>
           </li>
         </ul>

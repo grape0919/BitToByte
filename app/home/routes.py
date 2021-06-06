@@ -22,6 +22,11 @@ def alarmii():
     target = "KRW-BTC"
     return render_template('alarmii.html', datas=tickerAll())
 
+@blueprint.route('/simulation')
+@login_required
+def simulation():
+    target = "KRW-BTC"
+    return render_template('simulation.html', datas=tickerAll())
 
 @blueprint.route('/<template>')
 @login_required
