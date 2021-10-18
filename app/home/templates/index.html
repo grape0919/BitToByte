@@ -7,12 +7,71 @@
 
 {% block content %}
     <script type="text/javascript">
+
+      var myReader = new FileReader();
+      myReader.onload = function(event){
+          return JSON.stringify(myReader.result);
+      };
+      
+      var webSocket = new WebSocket("wss://api.upbit.com/websocket/v1");
+      webSocket.onopen = function(message){
+        console.log("Server connect...\n");
+        var msg = [
+          {ticket : "test4"},
+          {
+            type : "ticker",
+            codes : {{ datas|safe }}//["KRW-BTC",""]
+          }
+        ]
+        console.log(JSON.stringify(msg));
+        webSocket.send(JSON.stringify(msg));//'[{"ticket":"test"},{"type":"ticker","codes":["KRW-BTC"]}]');
+      };
+
+      // 소켓 서버로 부터 메시지가 오면 호출되는 함수.
+      webSocket.onmessage = function(message){
+        // 출력 area에 메시지를 표시한다.
+        //console.log(message.data.text());//myReader.readAsText(message.data))
+        //myReader.readAsText(message.data);
+        const printAddress = async () => {
+          const a = await message.data.text();
+          resultJson = JSON.parse(a);
+          //console.log(resultJson);
+          price_el = $("#"+resultJson.code+"_price").text(resultJson.trade_price);
+          price_el.removeClass("text-red")
+          price_el.removeClass("text-success")
+          rate_el = $("#"+resultJson.code+"_rate").empty();
+          rate_el.removeClass("text-red")
+          rate_el.removeClass("text-success")
+          rate = (resultJson.signed_change_rate*100).toFixed(2);
+          if (rate > 0){
+            rate_el.append("<i class=\"fas fa-arrow-up mr-3\"></i>").append(rate+"%");
+            rate_el.addClass("text-success")
+            price_el.addClass("text-success")
+          }else if(rate<0){
+            rate_el.append("<i class=\"fas fa-arrow-down mr-3\"></i>").append(rate+"%");
+            rate_el.addClass("text-red")
+            price_el.addClass("text-red")
+          }
+          $("#"+resultJson.code+"_acc_price").text(resultJson.acc_trade_price_24h);
+        };
+
+        printAddress();
+      };
+      // 소켓 접속이 끝나면 호출되는 함수
+      webSocket.onclose = function(message){
+        console.log("Server Disconnect...\n");
+      };
+      // 소켓 통신 중에 에러가 발생되면 호출되는 함수
+      webSocket.onerror = function(message){
+        console.log("error...\n");
+      };
+
       function autoRefresh_div()
-        {
+      {
         var currentLocation = window.location;
         $("#page").load(currentLocation + ' #page');
-        }
-        setInterval('autoRefresh_div()', 500);
+      }
+      //setInterval('autoRefresh_div()', 500);
     </script>
     <!-- Header -->
     <div class="header pb-6" style="background: #0f4c81">
@@ -146,38 +205,17 @@
                   </tr>
                 </thead>
                 <tbody>
-                  {% for data in datas%}
+                  {% for data in datas_list %}
                     <tr>
                       <th scope="row">
-                        {{ data.market }}
+                        {{ data }}
                       </th>
-                      <td class="
-                      {% if data.signed_change_rate < 0 %}
-                        text-red
-                      {% else %}
-                        text-success
-                      {% endif %}
-                      ">
-
-                        {{ data.trade_price }}
+                      <td 
+                          id="{{ data }}_price">
                       </td>
-                      <td class="
-                      {% if data.signed_change_rate < 0 %}
-                        text-red
-                      {% else %}
-                        text-success
-                      {% endif %}
-                      ">
-                        <i class="fas 
-                        {% if data.signed_change_rate < 0 %}
-                          fa-arrow-down
-                        {% else %}
-                          fa-arrow-up
-                        {% endif %}
-                         mr-3"></i>{{ '%0.2f' % (data.signed_change_rate * 100) }}%
+                      <td id="{{ data }}_rate">
                       </td>
-                      <td>
-                        {{ data.acc_trade_price_24h }}
+                      <td id="{{ data }}_acc_price">
                       </td>
                     </tr>
                   {% endfor %}
@@ -197,6 +235,7 @@
 <!-- Specific JS goes HERE --> 
 {% block javascripts %}
 
+  ws_send();
   <script src="/static/assets/vendor/chart.js/dist/Chart.min.js"></script>
   <script src="/static/assets/vendor/chart.js/dist/Chart.extension.js"></script>
 
