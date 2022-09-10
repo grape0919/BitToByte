@@ -10,6 +10,8 @@ tickers = pybithumb.get_tickers()
 # print(tickers)
 all = {}
 
+MA_DIR = "APICaller/src/thumb/ma"
+
 def bull_market(ticker, interval):
     df = pybithumb.get_ohlcv(ticker,interval=INTERVAL)
     if not df is None:
@@ -20,7 +22,7 @@ def bull_market(ticker, interval):
         print("failed make bull : ", interval)
 
 def make_bull_matrix(interval):
-    print("!@#!@# make ma5")
+    print("!@#!@# make ma", interval)
     write_str = ''
     if tickers:
         for ticker in tickers:
@@ -28,7 +30,7 @@ def make_bull_matrix(interval):
             ma = bull_market(ticker,interval)
             write_str = write_str + ticker + "\t" + str(ma) + "\n"
 
-        with open("thumb/ma"+str(interval),"w", encoding="utf8") as wf:
+        with open(MA_DIR+str(interval),"w", encoding="utf8") as wf:
             wf.write(write_str)
             wf.close()
     else :
@@ -38,14 +40,14 @@ def process(threshold=3.0, interval=30):
 
     ma5_list = {}
     ma30_list = {}
-    with open("thumb/ma5", "r", encoding="utf8") as rf:
+    with open(MA_DIR+"5", "r", encoding="utf8") as rf:
         for line in rf.readlines():
             tup = line.split("\t")
             if tup[1] == 'None\n':
                 tup[1] = 0.0
             ma5_list.update({tup[0]:float(tup[1])})
         rf.close()
-    with open("thumb/ma30", "r", encoding="utf8") as rf:   
+    with open(MA_DIR+"30", "r", encoding="utf8") as rf:   
         for line in rf.readlines():
             tup = line.split("\t")
             if tup[1] == 'None\n':
@@ -94,8 +96,8 @@ if __name__ == "__main__":
 
     ma5 = True
     ma30 = True
-    th = 3.0
-    inter = 15
+    th = 1.0
+    inter = 10
 
     for conf in sys.argv :
         if conf == '-ma5' :
@@ -108,7 +110,7 @@ if __name__ == "__main__":
             inter = conf.split('=')[1]
 
     if ma5 :
-        make_bull_matrix(5)
+        make_bull_matrix(1)
     if ma30 :
         make_bull_matrix(30)
 
